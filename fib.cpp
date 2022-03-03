@@ -11,12 +11,16 @@
 #include <algorithm>
 #include <numeric>
 
+/** static fibonacci calculation */
+
+/** main recursion function */
 template<int N>
 constexpr uint64_t fibT()
 {
     return fibT<N-1>() + fibT<N-2>();
 }
 
+/** recursion stop guard */
 template<>
 constexpr uint64_t fibT<0>()
 {
@@ -35,19 +39,23 @@ constexpr uint64_t fibT<2>()
     return 1;
 }
 
-template <int N>
+/** structure for static calculation of fibonacci number */
+template <int N, typename RT = uint64_t>
 struct fibT_s {
-    constexpr static uint64_t val = fibT_s<N-1>::val + fibT_s<N-2>::val;
+    typedef fibT_s<N-2, RT> prev2;
+    typedef fibT_s<N-1, RT> prev1;
+
+    constexpr static RT val = prev1::val + prev2::val;
 };
 
-template<>
-struct fibT_s<0> {
-    constexpr static uint64_t val = 0;
+template<typename RT>
+struct fibT_s<0, RT> {
+    constexpr static RT val = 0;
 };
 
-template<>
-struct fibT_s<1> {
-    constexpr static uint64_t val = 1;
+template<typename RT>
+struct fibT_s<1, RT> {
+    constexpr static RT val = 1;
 };
 
 /**
@@ -60,10 +68,10 @@ uint64_t fib(unsigned int n)
         return 0;
     }
 
-    if (n == 1)
-    {
-        return 1;
-    }
+    // if (n == 1)
+    // {
+    //     return 1;
+    // }
 
     uint64_t prev = 0;
     uint64_t nth = 1;
@@ -80,7 +88,7 @@ uint64_t fib(unsigned int n)
 
 uint64_t f2n_impl(unsigned int n2, std::vector<uint64_t>& vals)
 {
-    std::cout << "entry: f2n_impl(" << n2 << ")" << std::endl;
+    // std::cout << "entry: f2n_impl(" << n2 << ")" << std::endl;
     // std::string out{"["};
     // out.append(std::to_string(vals.front()));
 
@@ -113,8 +121,8 @@ uint64_t f2n_impl(unsigned int n2, std::vector<uint64_t>& vals)
         uint64_t fn = f2n_impl(n, vals);
         uint64_t fn1 = f2n_impl(n1, vals);
 
-        std::cout << "fn(" << n << ") -> " << fn << std::endl;
-        std::cout << "fn(" << n1 << ") -> " << fn1 << std::endl;
+        // std::cout << "fn(" << n << ") -> " << fn << std::endl;
+        // std::cout << "fn(" << n1 << ") -> " << fn1 << std::endl;
 
         res = ((2 * fn1) + fn) * fn;
     }
@@ -141,7 +149,7 @@ static std::vector<uint64_t> vals{0, 1, 1};
 
 uint64_t f2n(unsigned int n2)
 {
-    std::cout << "entry: f2n(" << n2 << ")" << std::endl;
+    // std::cout << "entry: f2n(" << n2 << ")" << std::endl;
 
     if (n2 == 0)
     {
@@ -158,7 +166,7 @@ uint64_t f2n(unsigned int n2)
         res = f2n_impl(n2, vals);
     }
 
-    std::cout << "exit: f2n(" << n2 << ") -> " << res << std::endl;
+    // std::cout << "exit: f2n(" << n2 << ") -> " << res << std::endl;
     return res;
 }
 
@@ -179,7 +187,7 @@ int main()
         auto fv = fib(n);
         auto f2v = f2n(n);
         std::cout << "fib(" << n << ") -> " << fv << ", f2n -> " << f2v << std::endl;
-        assert(fv == f2v);
+        // assert(fv == f2v);
     }
 
     // std::string out{"["};
@@ -214,6 +222,8 @@ int main()
               << std::endl;
     std::cout << " " << 10 << ": " << fibT<10>() << " fibT_s<" << 10 << ">::val " << fibT_s<10>::val
               << std::endl;
-    std::cout << " " << 11 << ": " << fibT<11>() << " fibT_s<" << 11 << ">::val " << fibT_s<11>::val
+    constexpr int i = 93;
+    std::cout << " " << i << ": " << fib(i) << " fibT_s<" << i << ">::val " << fibT_s<i>::val
               << std::endl;
+    // std::cout << " " << i << ": " << fib(i) << " fibT<" << i << ">()" << fibT<i>() << std::endl;
 }
