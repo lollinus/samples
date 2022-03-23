@@ -1,8 +1,9 @@
-#include <strings.h>
+#include <bitset>
 #include <cstdint>
+#include <functional>
+#include <iomanip>
 #include <iostream>
 #include <ostream>
-#include <bitset>
 
 struct bMod
 {
@@ -141,7 +142,9 @@ int main(int, char **)
               << "0b00111100110000111100001101011010: "
               << std::bitset<32>(reverseBitmask_32(0b00111100110000111100001101011010)) << std::endl;
 
-    std::cout << "0b1100001101011010001111001100001100111100110000111100001101011010: "
+    std::cout << std::setfill('=') << std::left << std::setw(80) << " 64 bit integer reverse "
+              << std::endl
+              << "0b1100001101011010001111001100001100111100110000111100001101011010: "
               << std::bitset<64>(reverseBitmask_64(
                      0b1100001101011010001111001100001100111100110000111100001101011010))
               << std::endl
